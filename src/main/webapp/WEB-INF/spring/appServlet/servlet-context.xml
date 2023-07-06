@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.kh.mw" />
+	
+	<!-- multipart File -->
+	<beans:bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<beans:property name="maxUploadSize" value="10000000"/>
+	</beans:bean>
+	
+	<!-- url 인터셉터 -->
+	<beans:bean id="urlInterceptor" class="com.kh.mw.interceptor.UrlInterceptor">
+	</beans:bean>
+	
+	<!-- 로그인 인터셉터 -->
+	<beans:bean id="loginInterceptor" class="com.kh.mw.interceptor.LoginInterceptor">
+   	</beans:bean>
+   	
+	<!-- 마이페이지 비밀번호 입력 인터셉터 -->
+	<beans:bean id="passwordInterceptor" class="com.kh.mw.interceptor.PasswordInterceptor">
+   	</beans:bean>
+	
+	<!-- 먼저 등록된 순으로 preHandle 실행(postHandle은 역순) -->
+	<!-- Url 인터셉터 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/url/*"/>
+			<mapping path="/url/*/ourstory"/>
+			<mapping path="/url/*/photos"/>
+			<mapping path="/url/*/qna"/>
+			<mapping path="/url/*/travel"/>
+			<mapping path="/url/*/messages"/>
+			<exclude-mapping path="/url/home"/>
+			<beans:ref bean="urlInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	<!-- 로그인 인터셉터 -->
+	<interceptors>
+    	<interceptor>
+    		<mapping path="/guest/**/*"/>
+    		<mapping path="/create/newproject"/>
+    		<mapping path="/planner/saveCheck"/>
+    		<mapping path="/qna/register"/>
+    		<beans:ref bean="loginInterceptor"/>
+    	</interceptor>
+    </interceptors>
+    
+	<!-- 마이페이지 비밀번호 입력 인터셉터 -->
+	<interceptors>
+    	<interceptor>
+    		<mapping path="/user/edit"/>
+    		<mapping path="/user/delete_user"/>
+<!--     		<exclude-mapping path="/user/list"/> -->
+    		<beans:ref bean="passwordInterceptor"/>
+    	</interceptor>
+    </interceptors>
+	
+	
+	
+</beans:beans>

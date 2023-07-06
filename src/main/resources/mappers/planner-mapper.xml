@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mappers.planner">
+	
+	<!-- Vendor 갯수 -->
+	<select id="getVendorsCount" resultType="int">
+		select count(*) from tbl_Pvendors
+		<include refid="search"></include>
+	</select>
+	
+	<!-- nextVal_v -->
+	<select id="getNextVal_v" resultType="int">
+		select Pseq_v_no.nextval from dual
+	</select>
+	
+	<!-- 검색 옵션 -->
+	<sql id="search">
+		<if test="search_type != null and search_region != null">
+           	where v_tcode = #{search_type}
+           	and v_rcode = #{search_region}
+        </if>
+	</sql>
+	
+	<!-- 정렬 옵션 -->
+	<sql id="filter">
+		<choose>
+			<when test='orderby == null or orderby == ""'>
+				order by v_no desc
+			</when>
+			<otherwise>
+				<choose>
+	           		<when test='orderby eq "v_score"'>
+	           			order by v_score desc
+	           		</when>
+	           		<when test='orderby eq "v_no"'>
+	           			order by v_no desc
+	           		</when>
+	           		<when test='orderby eq "v_name"'>
+	           			order by v_name asc
+	           		</when>
+	           	</choose>
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<!-- Vendor list 얻어오기 -->
+	<select id="getList_vVo" resultType="VendorVo">
+		select * from (
+    		select rownum rnum, a.* 
+		        from (
+		            select * from tbl_Pvendors
+		            <include refid="search"></include>
+		            <include refid="filter"></include>) a)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- v_no로 Vendor 얻기 -->
+	<select id="getVvo_byVno" resultType="VendorVo">
+		select * from tbl_Pvendors
+		where v_no = #{v_no}
+	</select>
+	
+	<!-- Vendor 추가 -->
+	<insert id="vendor_register">
+		insert into tbl_Pvendors
+		 	(v_no, v_tcode, v_rcode, v_name, v_address, v_tel, v_link, 
+		 		v_detail, v_score, v_pic)
+		values 
+			(#{v_no}, #{v_tcode}, #{v_rcode}, #{v_name}, #{v_address}, 
+				#{v_tel}, #{v_link}, #{v_detail}, #{v_score}, #{v_pic})
+	</insert>
+
+	<!-- Vendor 수정 -->
+	<update id="vendor_edit">
+		update tbl_Pvendors set 
+			v_tcode = #{v_tcode},
+			v_rcode = #{v_rcode},
+			v_name = #{v_name},
+			v_address = #{v_address},
+			v_tel = #{v_tel},
+			v_link = #{v_link},
+			v_detail = #{v_detail},
+			v_score = #{v_score}
+			<if test="v_pic != null">
+				, v_pic = #{v_pic}
+			</if>
+		where v_no = #{v_no}
+	</update>
+	
+	<!-- Vendor 삭제 -->
+	<delete id="vendor_delete">
+		delete from tbl_Pvendors
+		where v_no = #{v_no}
+	</delete>
+	
+	<!-- 아이디로 정보 얻어오기 - CheckVo -->
+	<select id="getCheckVo_byId" resultType="CheckVo">
+		select * from tbl_Pcheck
+		where userid = #{userid}
+	</select>
+	
+	<!-- 총 체크리스트 수 구하기 -->
+	<select id="getCheckCount" resultType="int">
+		select count(*) from tbl_Pcheck
+		where userid = #{userid}
+	</select>
+	
+	<!-- 체크리스트 입력 -->
+	<insert id="insertCheck">
+		insert into tbl_Pcheck
+		 	(userid, v_hall, v_dress, v_photo, v_beauty, v_shoot, v_card, 
+		 		v_helper, v_flower, v_final, v_end)
+		values 
+			(#{userid}, #{v_hall}, #{v_dress}, #{v_photo}, #{v_beauty}, 
+				#{v_shoot}, #{v_card}, #{v_helper}, #{v_flower}, #{v_final}, #{v_end})	
+	</insert>
+	
+	<!-- 체크리스트 수정 -->
+	<update id="updateCheck">
+		update tbl_Pcheck set 
+			v_hall = #{v_hall},
+			v_dress = #{v_dress},
+			v_photo = #{v_photo},
+			v_beauty = #{v_beauty},
+			v_shoot = #{v_shoot},
+			v_card = #{v_card},
+			v_helper = #{v_helper},
+			v_flower = #{v_flower},
+			v_final = #{v_final},
+			v_end = #{v_end}
+		where userid = #{userid}
+	</update>
+
+</mapper>

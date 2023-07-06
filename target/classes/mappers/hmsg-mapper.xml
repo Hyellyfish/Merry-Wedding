@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mappers.hmsg">
+	
+	<!-- 좋아요 -->
+	<update id="like">
+		update tbl_Hmessages set 
+			m_likecnt = (select m_likecnt from tbl_Hmessages 
+							where m_no = #{mno})+1
+		where m_no = #{mno}
+	</update>
+	
+	<!-- 좋아요 취소 -->
+	<update id="likeCancel">
+		update tbl_Hmessages set
+			m_likecnt = (select m_likecnt from tbl_Hmessages 
+							where m_no = #{mno})-1
+		where m_no = #{mno}
+	</update>
+	
+	<!-- 메세지 갯수 -->
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_Hmessages
+		where m_admin = #{userid} <include refid="search"></include>
+	</select>
+	
+	<!-- 검색 옵션 -->
+	<sql id="search">
+		<if test="pagingDto.searchName != null">
+           	and m_name = #{pagingDto.searchName}
+        </if>
+	</sql>
+	
+	<!-- H_MessagesVo - 관리자 아이디로 얻기 -->
+	<select id="getList_mVo_byId" resultType="H_MessagesVo">
+		select * from tbl_Hmessages
+		where m_admin = #{userid}
+		order by m_no desc
+	</select>
+	
+	<!-- H_MessagesVo - 관리자 아이디, pagingDto로 얻기 -->
+	<select id="getList_mVo" resultType="H_MessagesVo">
+		select * from (
+    		select rownum rnum, a.* 
+		        from (
+		            select * from tbl_Hmessages
+		            where m_admin = #{userid}
+		            <include refid="search"></include>
+		            order by m_no desc) a)
+		where rnum between #{pagingDto.startRow} and #{pagingDto.endRow}
+	</select>
+	
+	<!-- insert_mVo -->
+	<insert id="insert_mVo">
+		insert into tbl_Hmessages
+		 	(m_no, m_admin, m_text, m_name, m_time, m_pw, m_pic)
+		values 
+			(#{m_no}, #{m_admin}, #{m_text}, #{m_name}, #{m_time}, 
+				#{m_pw}, #{m_pic})
+	</insert>
+	
+	<!-- 메세지 수정 -->
+	<update id="editMsg">
+		update tbl_Hmessages set 
+			m_text = #{m_text},
+			m_name = #{m_name},
+			m_pw = #{m_pw}
+			<if test="m_pic != null">
+				, m_pic = #{m_pic}
+			</if>
+		where m_no = #{m_no}
+	</update>
+	
+	<!-- 메세지 삭제 -->
+	<delete id="deleteMsg">
+		delete from tbl_Hmessages
+		where m_no = #{mno}
+	</delete>
+	
+	<!-- nextVal_m -->
+	<select id="getNextVal_m" resultType="int">
+		select Hseq_msg_no.nextval from dual
+	</select>
+	
+</mapper>

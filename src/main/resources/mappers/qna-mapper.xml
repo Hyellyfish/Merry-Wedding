@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mappers.qna">
+	
+	<!-- 게시물 리스트 -->
+	<select id="qnaList" resultType="QnaVo">
+		select * from 
+				(select rownum rnum, a.* from 
+                  (select * from tbl_qna
+                 	<include refid="search"></include>
+                   order by re_group desc, re_seq asc) a)
+        where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 글갯수 -->
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_qna
+		<include refid="search"></include>
+	</select>
+	
+	<!-- 글 등록 -->
+	<insert id="qnaRegister">
+		insert into tbl_qna(c_no, c_title, c_content, c_date, c_id, re_group, c_secret, c_password)
+		values(#{c_no}, #{c_title}, #{c_content}, sysdate, #{c_id}, #{c_no}, #{c_secret, jdbcType=VARCHAR}, #{c_password, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="getNextVal" resultType="int">
+		select seq_qna_no.nextval from dual
+	</select>
+
+	<select id="selectByCno" resultType="QnaVo">
+		select * from tbl_qna
+		where c_no = #{c_no}
+	</select>
+	
+	<update id="qnaModify">
+		update tbl_qna set
+			c_title = #{c_title},
+			c_content = #{c_content},
+			c_secret = #{c_secret, jdbcType=VARCHAR},
+			c_password = #{c_password, jdbcType=VARCHAR}
+		where c_no = #{c_no}
+	</update>
+	
+	<delete id="qnaDelete">
+		delete from tbl_qna
+		where c_no = #{c_no}
+	</delete>
+	
+	<!-- 답글 -->
+	<insert id="insertReply">
+		insert into tbl_qna(c_no, c_title, c_content, c_date, c_id, re_group, re_seq, re_level, c_secret, c_password)
+		values(seq_qna_no.nextval, #{c_title}, #{c_content}, sysdate, #{c_id}, #{re_group}, #{re_seq}+1, #{re_level}+1, #{c_secret}, #{c_password})
+	</insert>	
+	
+	<!-- 조회수 -->
+	<update id="updateViewcnt">
+		update tbl_qna set
+			viewcnt = viewcnt + 1
+		where c_no = #{c_no}
+	</update>
+	
+	<sql id="search">
+	 <if test="searchType != null and keyword != null">
+            	<choose>
+            		<when test='searchType == "t"'>
+            			where c_title like '%' || #{keyword} || '%'
+            		</when>
+            		<when test='searchType == "c"'>
+            			where c_content like '%' || #{keyword} || '%'
+            		</when>
+            		<when test='searchType == "i"'>
+            			where c_id like '%' || #{keyword} || '%' 
+            		</when>
+            		<when test='searchType == "tc"'>
+            			where c_title like '%' || #{keyword} || '%'
+            			or c_content like '%' || #{keyword} || '%'
+            		</when>
+            	</choose>
+	   </if>
+	</sql>
+	
+	<select id="getPassword" resultType="QnaVo">
+		select * from tbl_qna
+		where c_password = #{c_password}
+		and c_no = #{c_no}
+	</select>
+
+</mapper>

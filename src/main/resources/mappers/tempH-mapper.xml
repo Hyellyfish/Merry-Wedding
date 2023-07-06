@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mappers.tempH">
+	
+	<!-- H_TempPhotosVo -->
+	<select id="getTpVo" resultType="H_TempPhotosVo">
+		select * from tbl_Htempphotos
+		where userid = #{userid}
+	</select>
+	
+	<!-- H_HomeVo -->
+	<select id="getHvo" resultType="H_HomeVo">
+		select * from tbl_Hhome
+		where userid = #{userid}
+	</select>
+	
+	<!-- H_HomeScheduleVo -->
+	<select id="getList_hsVo" resultType="H_HomeScheduleVo">
+		select * from tbl_Hhome_schedule
+		where h_no = #{h_no}
+		order by hs_no
+	</select>
+	
+	<!-- H_OurstoryVo -->
+	<select id="getOvo" resultType="H_OurstoryVo">
+		select * from tbl_Hourstory
+		where userid = #{userid}
+	</select>
+	
+	<!-- H_PhotosVo -->
+	<select id="getPvo" resultType="H_PhotosVo">
+		select * from tbl_Hphotos
+		where userid = #{userid}
+	</select>
+	
+	<!-- H_PhotosDataVo -->
+	<select id="getList_pdVo" resultType="H_PhotosDataVo">
+		select * from tbl_HPhotos_data
+		where p_no = #{p_no}
+		order by pd_no
+	</select>
+	
+	<!-- H_QnaVo -->
+	<select id="getQvo" resultType="H_QnaVo">
+		select * from tbl_Hqna
+		where userid = #{userid}
+	</select>
+	
+	<!-- H_QnaDataVo -->
+	<select id="getList_qdVo" resultType="H_QnaDataVo">
+		select * from tbl_Hqna_data
+		where q_no = #{q_no}
+		order by qd_no
+	</select>
+	
+	<!-- H_TravelVo -->
+	<select id="getTvo" resultType="H_TravelVo">
+		select * from tbl_Htravel
+		where userid = #{userid}
+	</select>
+	
+	<!-- insert_tpVo -->
+	<insert id="insert_tpVo">
+		insert into tbl_Htempphotos
+		 	(userid, tp_htitlepic, tp_hspic, tp_mpic, tp_titlepic)
+		values 
+			(#{userid}, #{tp_htitlepic}, 
+				#{tp_hspic}, #{tp_mpic}, #{tp_titlepic})
+	</insert>
+	
+	<!-- insert_hVo -->
+	<insert id="insert_hVo">
+		insert into tbl_Hhome
+		 	(userid, h_no, h_pic, h_weddate, h_wedloc, h_gname, h_bname)
+		values 
+			(#{userid}, #{h_no}, #{h_pic}, #{h_weddate}, 
+				#{h_wedloc}, #{h_gname}, #{h_bname})
+	</insert>
+	
+	<!-- insert_hsVo -->
+	<insert id="insert_hsVo">
+		insert into tbl_Hhome_schedule
+		 	(h_no, hs_no, hs_starttime, hs_endtime, hs_event)
+		values 
+			(#{h_no}, Hseq_hs_no.nextval, #{hs_starttime}, 
+				#{hs_endtime}, #{hs_event})
+	</insert>
+	
+	<!-- insert_oVo -->
+	<insert id="insert_oVo">
+		insert into tbl_Hourstory
+		 	(userid, o_pic, o_title, o_content)
+		values 
+			(#{userid}, #{o_pic}, #{o_title}, #{o_content})
+	</insert>
+	
+	<!-- insert_pVo -->
+	<insert id="insert_pVo">
+		insert into tbl_Hphotos
+		 	(userid, p_no)
+		values 
+			(#{userid}, #{p_no})
+	</insert>
+	
+	<!-- insert_pdVo -->
+	<insert id="insert_pdVo">
+		insert into tbl_HPhotos_data
+		 	(p_no, pd_no, pd_pic, pd_pdate, pd_text, pd_title)
+		values 
+			(#{p_no}, Hseq_pd_no.nextval, #{pd_pic}, 
+				#{pd_pdate}, #{pd_text}, #{pd_title})
+	</insert>
+	
+	<!-- insert_qVo -->
+	<insert id="insert_qVo">
+		insert into tbl_Hqna
+		 	(userid, q_no)
+		values 
+			(#{userid}, #{q_no})
+	</insert>
+	
+	<!-- insert_qdVo -->
+	<insert id="insert_qdVo">
+		insert into tbl_Hqna_data
+		 	(q_no, qd_no, qd_q, qd_a)
+		values 
+			(#{q_no}, Hseq_qd_no.nextval, #{qd_q}, #{qd_a})
+	</insert>
+	
+	<!-- insert_tVo -->
+	<insert id="insert_tVo">
+		insert into tbl_Htravel
+		 	(userid, t_wedloc, t_wedlocd, t_text)
+		values 
+			(#{userid}, #{t_wedloc}, #{t_wedlocd}, #{t_text})
+	</insert>
+	
+	<!-- nextVal_h -->
+	<select id="getNextVal_h" resultType="int">
+		select Hseq_h_no.nextval from dual
+	</select>
+	
+	<!-- nextVal_p -->
+	<select id="getNextVal_p" resultType="int">
+		select Hseq_p_no.nextval from dual
+	</select>
+	
+	<!-- nextVal_q -->
+	<select id="getNextVal_q" resultType="int">
+		select Hseq_q_no.nextval from dual
+	</select>
+	
+	<!-- h_no -->
+	<select id="getH_no" resultType="int">
+		select h_no from tbl_Hhome
+		where userid = #{userid}
+	</select>
+	
+	<!-- p_no -->
+	<select id="getP_no" resultType="int">
+		select p_no from tbl_Hphotos
+		where userid = #{userid}
+	</select>
+	
+	<!-- q_no -->
+	<select id="getQ_no" resultType="int">
+		select q_no from tbl_Hqna
+		where userid = #{userid}
+	</select>
+	
+	<!-- Pjnum 갱신 -->
+	<update id="updatePjnum">
+		update tbl_user set 
+			pjnum = #{pjnum}
+		where userid = #{userid}
+	</update>
+	
+	<!-- TempType 갱신 -->
+	<update id="updateTempType">
+		update tbl_user set 
+			temptype = #{temptype}
+		where userid = #{userid}
+	</update>
+	
+	<!-- remove_tpVo -->
+	<delete id="remove_tpVo">
+		delete from tbl_Htempphotos
+		where userid = #{userid}
+	</delete>
+	
+	<!-- remove_hVo -->
+	<delete id="remove_hVo">
+		delete from tbl_Hhome
+		where userid = #{userid}
+	</delete>
+	
+	<!-- remove_hsVo -->
+	<delete id="remove_hsVo">
+		delete from tbl_Hhome_schedule
+		where h_no = #{h_no}
+	</delete>
+	
+	<!-- remove_hsVo (hs_no) -->
+	<delete id="remove_hsVo_by_hs_no">
+		delete from tbl_Hhome_schedule
+		where hs_no = #{hs_no}
+	</delete>
+	
+	<!-- remove_oVo -->
+	<delete id="remove_oVo">
+		delete from tbl_Hourstory
+		where userid = #{userid}
+	</delete>
+	
+	<!-- remove_pVo -->
+	<delete id="remove_pVo">
+		delete from tbl_Hphotos
+		where userid = #{userid}
+	</delete>
+	
+	<!-- remove_pdVo -->
+	<delete id="remove_pdVo">
+		delete from tbl_HPhotos_data
+		where p_no = #{p_no}
+	</delete>
+	
+	<!-- remove_pdVo (pd_no) -->
+	<delete id="remove_pdVo_by_pd_no">
+		delete from tbl_HPhotos_data
+		where pd_no = #{pd_no}
+	</delete>
+	
+	<!-- remove_qVo -->
+	<delete id="remove_qVo">
+		delete from tbl_Hqna
+		where userid = #{userid}
+	</delete>
+	
+	<!-- remove_qdVo -->
+	<delete id="remove_qdVo">
+		delete from tbl_Hqna_data
+		where q_no = #{q_no}
+	</delete>
+	
+	<!-- remove_qdVo (qd_no) -->
+	<delete id="remove_qdVo_by_qd_no">
+		delete from tbl_Hqna_data
+		where qd_no = #{qd_no}
+	</delete>
+	
+	<!-- remove_tVo -->
+	<delete id="remove_tVo">
+		delete from tbl_Htravel
+		where userid = #{userid}
+	</delete>
+	
+	<!-- 수정-tpVo -->
+	<update id="update_tpVo">
+		update tbl_Htempphotos set 
+			<choose>
+				<when test="tp_htitlepic == null">
+					tp_htitlepic = tp_htitlepic,
+				</when>
+				<when test="tp_htitlepic != null">
+					tp_htitlepic = #{tp_htitlepic},
+				</when>				
+			</choose>
+			<choose>
+				<when test="tp_hspic == null">
+					tp_hspic = tp_hspic,
+				</when>
+				<when test="tp_hspic != null">
+					tp_hspic = #{tp_hspic},
+				</when>				
+			</choose>
+			<choose>
+				<when test="tp_mpic == null">
+					tp_mpic = tp_mpic,
+				</when>
+				<when test="tp_mpic != null">
+					tp_mpic = #{tp_mpic},
+				</when>				
+			</choose>
+			<choose>
+				<when test="tp_titlepic == null">
+					tp_titlepic = tp_titlepic
+				</when>
+				<when test="tp_titlepic != null">
+					tp_titlepic = #{tp_titlepic}
+				</when>				
+			</choose>
+		where userid = #{userid}
+	</update>
+	
+	<!-- 수정-hVo -->
+	<update id="update_hVo">
+		update tbl_Hhome set 
+			<choose>
+				<when test="h_pic == null">
+					h_pic = h_pic,
+				</when>
+				<when test="h_pic != null">
+					h_pic = #{h_pic},
+				</when>				
+			</choose>
+			h_weddate = #{h_weddate},
+			h_wedloc = #{h_wedloc},
+			h_gname = #{h_gname},
+			h_bname = #{h_bname}
+		where userid = #{userid}
+	</update>
+	
+	<!-- 수정-hsVo -->
+	<update id="update_hsVo">
+		update tbl_Hhome_schedule set 
+			hs_starttime = #{hsVo.hs_starttime},
+			hs_endtime = #{hsVo.hs_endtime},
+			hs_event = #{hsVo.hs_event}
+		where hs_no = #{hs_no}
+	</update>
+	
+	<!-- 수정-oVo -->
+	<update id="update_oVo">
+		update tbl_Hourstory set 
+			<choose>
+				<when test="o_pic == null">
+					o_pic = o_pic,
+				</when>
+				<when test="o_pic != null">
+					o_pic = #{o_pic},
+				</when>				
+			</choose>
+			o_title = #{o_title},
+			o_content = #{o_content}
+		where userid = #{userid}
+	</update>
+	
+	<!-- 수정-pdVo -->
+	<update id="update_pdVo">
+		update tbl_HPhotos_data set 
+			<choose>
+				<when test="pdVo.pd_pic == null">
+					pd_pic = pd_pic,
+				</when>
+				<when test="pdVo.pd_pic != null">
+					pd_pic = #{pdVo.pd_pic},
+				</when>				
+			</choose>
+			pd_pdate = #{pdVo.pd_pdate},
+			pd_text = #{pdVo.pd_text},
+			pd_title = #{pdVo.pd_title}
+		where pd_no = #{pd_no}
+	</update>
+	
+	<!-- 수정-qdVo -->
+	<update id="update_qdVo">
+		update tbl_Hqna_data set 
+			qd_q = #{qdVo.qd_q},
+			qd_a = #{qdVo.qd_a}
+		where qd_no = #{qd_no}
+	</update>
+	
+	<!-- 수정-tVo -->
+	<update id="update_tVo">
+		update tbl_Htravel set 
+			t_wedloc = #{t_wedloc},
+			t_wedlocd = #{t_wedlocd},
+			t_text = #{t_text}
+		where userid = #{userid}
+	</update>
+	
+</mapper>

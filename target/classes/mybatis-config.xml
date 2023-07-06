@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+<configuration>
+	<!-- null 값을 허용하려면 mappers에서 매핑되는 값 뒤에 
+		jdbcType = 타입 을 넣어주면 된다
+		(대신 밑의 settings 부분 붙임으로써 위 작업 대체가능) -->
+	<settings> 
+	    <setting name="cacheEnabled" value="false" />
+	    <setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	<typeAliases>
+		<!-- 패키지 단위 -->
+		<package name="com.kh.mw.vo"/>
+	</typeAliases>
+</configuration>

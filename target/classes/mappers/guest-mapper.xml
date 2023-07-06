@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mappers.guest">
+	
+	<select id="getNextVal" resultType="int">
+		select seq_g_no.nextval from dual
+	</select>
+	
+	<!-- 하객 명단 -->
+	<select id="guestList" resultType="GuestVo">
+		select g.g_no, g.g_name, g.g_phonenumber from tbl_guest g, tbl_user u
+		where g.userid = u.userid
+		and g.userid = #{userid}
+		order by g_no
+	</select>
+	
+	<!-- 하객 등록 -->
+	<insert id="guestRegister">
+		insert into tbl_guest(g_no, g_name, g_phonenumber, userid)
+		values (#{g_no}, #{g_name}, #{g_phonenumber}, #{userid})
+	</insert>
+	
+	<!-- 선택 삭제 -->
+	<delete id="guestDelete">
+		delete from tbl_guest
+		where g_no in
+		<foreach collection="arr_g_no" item="g_no" open="(" close=")" separator=",">
+		#{g_no}
+		</foreach>
+	</delete>
+	
+	<!-- 하객 정보 수정 -->
+	<update id="guestModify">
+		update tbl_guest set
+			g_name = #{g_name},
+			g_phonenumber = #{g_phonenumber}
+		where g_no = #{g_no}
+	</update>
+	
+	<!-- 목록 갯수 -->
+	<select id="getCount" resultType="int">
+		select count(*) from tbl_guest
+		where userid = #{userid}
+	</select>
+
+</mapper>
