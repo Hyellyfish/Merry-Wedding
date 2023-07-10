@@ -18,6 +18,7 @@
 						$("#btncheckId").attr("value", inputId);
 					} else {
 						alert("사용할 수 없는 아이디입니다.");
+						$("#userid").val("");
 					}
 				});
 			}
@@ -39,6 +40,7 @@
 						$("#btncheckUrl").attr("value", inputUrl);
 					} else {
 						alert("사용할 수 없는 url입니다.");
+						$("#userurl").val("");
 					}
 				});
 			}
