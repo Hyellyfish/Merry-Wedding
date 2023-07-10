@@ -91,7 +91,9 @@ public class UserController {
 		System.out.println(userVo);
 		boolean result = userService.registerRun(userVo);
 		System.out.println("*User컨트롤러* 회원가입처리: "+result);
-		rttr.addFlashAttribute("register_result", "success");
+		if (result) {
+			rttr.addFlashAttribute("register_result", "success");
+		}
 		return "redirect:/main/login";
 	}
 	
